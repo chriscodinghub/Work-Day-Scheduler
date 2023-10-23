@@ -21,7 +21,7 @@
 //   setInterval(colorFunct, 1000)
 
 
-//$(function () {
+$(function () {
     
     var now = dayjs().hour()
     colorFunct()
@@ -42,7 +42,7 @@
         //console.log(timeBlock)
         timeBlock.each(function(){
             var hourBlockText = this.children[0].textContent
-            var textArea = $('.time-block').find('.description')
+            var textArea = $(this).find('.description')
             
             var hourBlock
             if (hourBlockText.includes('am')){
@@ -56,8 +56,9 @@
                     hourBlock += 12
                 }   
             }
-            if (now === hourBlock) {
+            if (hourBlock === dayjs().hour()) {
                 textArea.addClass("present")
+                
             } 
             else if (now > hourBlock) {
                 textArea.addClass("past")
@@ -101,4 +102,4 @@
     // attribute of each time-block be used to do this?
     //
     // TODO: Add code to display the current date in the header of the page.
-  //});
+  });
