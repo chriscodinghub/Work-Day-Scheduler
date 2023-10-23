@@ -17,47 +17,72 @@
 // the code isn't run until the browser has finished rendering all the elements
 // in the html.
 //var now = dayjs('hh')
-var hourNine = $('#hour-9')
-hourNine = dayjs().hour(9)
-var hourTen = $('#hour-10')
-var hourEleven = $('#hour-11')
-var hourTwelve = $('#hour-12')
-hourTwelve = dayjs('12', 'hh')
-var hourOne = $('#hour-1')
-var hourTwo = $('#hour-2')
-var hourThree = $('#hour-3')
-var hourFour = $('#hour-4')
-var hourFive = $('#hour-5')
 
-var hourBlocks = [
-    'hourNine',
-    'hourTwelve',
-]
+//   setInterval(colorFunct, 1000)
 
-function colorFunct(){
-    for ( var i=0; i < hourBlocks.length; i++)
 
-    if (now === hourBlocks) {
-        textarea.addClass("row time-block present")
-    } 
-    else if (now > hourBlocks) {
-        textarea.addClass("row time-block past")
-    }
-    else if (now < hourBlocks) {
-        textarea.addClass("row time-block future")
-    }
+//$(function () {
+    
+    var now = dayjs().hour()
+    colorFunct()
+    setInterval(colorFunct, 10000)
+    reCallStorage()
+    timerHandler()
+    setInterval(timerHandler, 1000)
+    
+    $('.saveBtn').on('click', function(){
+        var keyId = $(this).parent().attr('id')
+    var textAreaVal = $(this).siblings('.description').val()
+    localStorage.setItem(keyId, textAreaVal)
+    })
+
+    function colorFunct(){
+        
+        var timeBlock = $('.time-block')
+        //console.log(timeBlock)
+        timeBlock.each(function(){
+            var hourBlockText = this.children[0].textContent
+            var textArea = $('.time-block').find('.description')
+            
+            var hourBlock
+            if (hourBlockText.includes('am')){
+                hourBlock = parseInt(hourBlockText.replace('am','').trim())
+                if (hourBlock === 12) {
+                    hourBlock = 0
+                }
+            } else {
+                hourBlock = parseInt(hourBlockText.replace('pm','').trim())
+                if (hourBlock !== 12) {
+                    hourBlock += 12
+                }   
+            }
+            if (now === hourBlock) {
+                textArea.addClass("present")
+            } 
+            else if (now > hourBlock) {
+                textArea.addClass("past")
+            }
+            else {
+                textArea.addClass("future")
+            }
+            
+        })
 }
 
-function timerHandler(){
-    var today = dayjs();
-    $('#currentDay').text(today.format('dddd, MMMM D YYYY, h:mm:ss a'))
+    function reCallStorage() {
+        var timeBlock = $('.time-block')
+        var storeStuff
+        timeBlock.each(function(){
+        var keyId = $(this).attr('id')
+        storeStuff = localStorage.getItem(keyId)
+    $(this).find('.description').val(storeStuff)
+    })
     }
-    setInterval(timerHandler, 1000)
-
- setInterval(colorFunct, 10000)
-
-
-$(function () {
+    function timerHandler(){
+        var today = dayjs();
+        $('#currentDay').text(today.format('dddd, MMMM D YYYY, h:mm:ss a'))
+    }
+    
     // TODO: Add a listener for click events on the save button. This code should
     // use the id in the containing time-block as a key to save the user input in
     // local storage. HINT: What does `this` reference in the click listener
@@ -76,4 +101,4 @@ $(function () {
     // attribute of each time-block be used to do this?
     //
     // TODO: Add code to display the current date in the header of the page.
-  });
+  //});
